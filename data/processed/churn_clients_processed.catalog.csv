@@ -1,0 +1,18 @@
+feature,sources,formula,hypotheses,availability,unconfirmed_sources
+monthly_fee,monthly_fee,Conversion numérique ; valeurs hors domaine/infinies → NA,H03 / contrôle qualité,unconfirmed,monthly_fee
+monthly_fee_missing,monthly_fee,1 si valeur brute absente ou chaîne vide ; 0 sinon,H03 / contrôle qualité,unconfirmed,monthly_fee
+monthly_fee_invalid,monthly_fee,1 si valeur renseignée non numérique ou hors domaine ; 0 sinon,H03 / contrôle qualité,unconfirmed,monthly_fee
+data_gb,data_gb,Conversion numérique ; valeurs hors domaine/infinies → NA,H03 / H10,unconfirmed,data_gb
+support_calls_3m,support_calls_3m,Conversion numérique ; valeurs hors domaine/infinies → NA,H02 / H04,unconfirmed,support_calls_3m
+late_payments,late_payments,Conversion numérique ; valeurs hors domaine/infinies → NA,H02,unconfirmed,late_payments
+nps,nps,Conversion numérique ; valeurs hors domaine/infinies → NA,H04 / H05,unconfirmed,nps
+nps_missing,nps,1 si valeur brute absente ou chaîne vide ; 0 sinon,H04 / H05,unconfirmed,nps
+nps_invalid,nps,1 si valeur renseignée non numérique ou hors domaine ; 0 sinon,H04 / H05,unconfirmed,nps
+contract,contract,Espaces externes/casse → libellé canonique ; inconnu réservé ; manquant conservé,H01,unconfirmed,contract
+region,region,Espaces externes/casse → libellé canonique ; inconnu réservé ; manquant conservé,H07,unconfirmed,region
+channel,channel,Espaces externes/casse → libellé canonique ; inconnu réservé ; manquant conservé,Axe 7 : vérifier après normalisation,unconfirmed,channel
+age_group,age,"Tranches [a, b), dernière ouverte ; bornes [18.0, 25.0, 35.0, 45.0, 55.0, 65.0, 80.0] ; hors domaine/manquant → NA","H07 / Axe 18 : association descriptive, à évaluer",unconfirmed,age
+tenure_months,"snapshot_date, signup_date",Durée en jours / 30.4375 ; chronologie invalide → NA,H01 / H09; H01,unconfirmed,"snapshot_date, signup_date"
+tenure_unavailable,"snapshot_date, signup_date",1 si dates absentes/invalides ou ancienneté négative,H01 / H09; H01,unconfirmed,"snapshot_date, signup_date"
+log1p_tenure_months,"snapshot_date, signup_date","log(1 + tenure_months), sans apprentissage",H01 / H09; H01,unconfirmed,"snapshot_date, signup_date"
+support_payment_interaction,"support_calls_3m, late_payments",Produit des deux compteurs valides ; NA propagés,H02 / H04; H02,unconfirmed,"support_calls_3m, late_payments"

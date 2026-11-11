@@ -1,0 +1,49 @@
+# Première version candidate : règles déterministes, pas de fit sur tout le dataset.
+id_column: customer_id
+snapshot_column: snapshot_date
+signup_column: signup_date
+date_format: "%Y-%m-%d"
+days_per_month: 30.4375
+numeric_columns: [monthly_fee, data_gb, support_calls_3m, late_payments, nps]
+categorical_columns: [contract, region, channel]
+indicator_columns: [monthly_fee, nps]
+excluded_columns: [customer_id, snapshot_date, signup_date, age, dept, last_invoice_amount, retention_offer_declined]
+unknown_category: __unknown__
+log_tenure: true
+# H10 : désactivé tant que l'unité/les extrêmes d'usage ne sont pas confirmés.
+log_usage: false
+usage_column: data_gb
+# H02 : représentation candidate, pas un score métier ni une disponibilité validée.
+support_payment_interaction: true
+support_column: support_calls_3m
+payments_column: late_payments
+# L'EDA n'apporte pas de preuve de disponibilité as-of : aucune confirmation inventée.
+source_availability:
+  age: unconfirmed
+  snapshot_date: unconfirmed
+  signup_date: unconfirmed
+  contract: unconfirmed
+  region: unconfirmed
+  channel: unconfirmed
+  monthly_fee: unconfirmed
+  data_gb: unconfirmed
+  support_calls_3m: unconfirmed
+  late_payments: unconfirmed
+  nps: unconfirmed
+hypotheses:
+  age: "H07 / Axe 18 : association descriptive, à évaluer"
+  snapshot_date: H01 / H09
+  signup_date: H01
+  contract: H01
+  region: H07
+  channel: "Axe 7 : vérifier après normalisation"
+  monthly_fee: H03 / contrôle qualité
+  data_gb: H03 / H10
+  support_calls_3m: H02 / H04
+  late_payments: H02
+  nps: H04 / H05
+
+# Usage dérivé de l'âge autorisé comme candidat ; âge brut toujours exclu.
+age_grouping: true
+age_column: age
+age_bins: [18, 25, 35, 45, 55, 65, 80]

@@ -6,3 +6,5 @@ churn_target_column: churn
 pilot_target_column: churn_30d
 validation_config_path: configs/validation.yaml
 eda_config_path: configs/data.yaml
+features_config_path: configs/features.yaml
+feature_output_dir: data/processed
