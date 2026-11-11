@@ -1,0 +1,83 @@
+[project]
+name = "telco-churn-optimization"
+version = "0.1.0"
+description = "End-to-end telecom churn prediction, retention campaign optimization, causal analysis, and MLOps"
+authors = [
+    { name = "Manda Surel", email = "s239150.eps@gmail.com" }
+]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+
+
+dependencies = [
+    "numpy>=1.26,<3.0",
+    "pandas>=2.2,<3.0",
+    "scipy>=1.13,<2.0",
+    "scikit-learn>=1.5,<2.0",
+
+    # Gradient Boosting Models
+    "xgboost>=2.1,<4.0",
+    "catboost>=1.2,<2.0",
+    "lightgbm>=4.5,<5.0",
+
+    # Configuration & Validation
+    "pydantic>=2.9,<3.0",
+    "pyyaml>=6.0,<7.0",
+
+    # Logging & Model Persistence
+    "loguru>=0.7,<0.8",
+    "joblib>=1.4,<2.0",
+]
+
+
+[tool.poetry]
+packages = [
+    { include = "telco_churn", from = "src" },
+    { include = "telco_churn_optimization", from = "src" }
+]
+
+[tool.poetry.group.notebook.dependencies]
+ipykernel = ">=6.29,<8.0"
+ipywidgets = ">=8.1,<9.0"
+matplotlib = ">=3.9,<4.0"
+seaborn = ">=0.13,<0.14"
+plotly = ">=5.24,<7.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.3,<10.0"
+pytest-cov = ">=5.0,<8.0"
+ruff = ">=0.9,<1.0"
+
+[tool.poetry.group.mlops.dependencies]
+mlflow = ">=2.17,<4.0"
+evidently = ">=0.7,<1.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+extend-exclude = [
+    ".venv",
+    ".python-runtime",
+    "data",
+    "models",
+    "outputs",
+    "logs",
+    "notebooks/.ipynb_checkpoints",
+]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "B"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra"

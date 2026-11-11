@@ -1,0 +1,2 @@
+# Seules les différences avec base.yaml sont déclarées ici.
+log_level: DEBUG

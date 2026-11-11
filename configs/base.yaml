@@ -1,0 +1,4 @@
+churn_path: data/raw/churn_clients.csv
+pilot_path: data/raw/pilote_campagne_2023.csv
+log_path: logs/telco_churn.log
+log_level: INFO
