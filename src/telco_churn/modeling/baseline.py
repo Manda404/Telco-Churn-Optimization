@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+from sklearn.base import ClassifierMixin
 from sklearn.compose import ColumnTransformer
 from sklearn.dummy import DummyClassifier
 from sklearn.impute import SimpleImputer
@@ -22,51 +23,44 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, StandardScaler
 
 
-def normalize_categories(frame):
+def normalize_categories(frame: pd.DataFrame) -> pd.DataFrame:
     """Convertir les chaînes pandas et pd.NA en objets et np.nan pour sklearn."""
     return frame.astype(object).where(frame.notna(), np.nan)
 
 
-def build_baselines(train: pd.DataFrame) -> dict[str, Pipeline]:
-    """Inférer les types sur train ; chaque pipeline possède son prétraitement."""
+def _build_pipeline(train: pd.DataFrame, model: ClassifierMixin) -> Pipeline:
+    """Construire un prétraitement indépendant pour chaque estimateur."""
     numeric = train.select_dtypes(include="number").columns.tolist()
     categorical = [name for name in train if name not in numeric]
+    numeric_pipeline = Pipeline(
+        [
+            ("imputer", SimpleImputer(strategy="median", keep_empty_features=True)),
+            ("scale", StandardScaler()),
+        ]
+    )
+    categorical_pipeline = Pipeline(
+        [
+            ("normalize", FunctionTransformer(normalize_categories)),
+            ("imputer", SimpleImputer(strategy="most_frequent", keep_empty_features=True)),
+            ("encode", OneHotEncoder(handle_unknown="ignore")),
+        ]
+    )
+    preprocessing = ColumnTransformer(
+        [
+            ("numeric", numeric_pipeline, numeric),
+            ("categorical", categorical_pipeline, categorical),
+        ]
+    )
+    return Pipeline([("preprocessing", preprocessing), ("model", model)])
 
-    def pipeline(model):
-        preprocessing = ColumnTransformer(
-            [
-                (
-                    "numeric",
-                    Pipeline(
-                        [
-                            ("imputer", SimpleImputer(strategy="median", keep_empty_features=True)),
-                            ("scale", StandardScaler()),
-                        ]
-                    ),
-                    numeric,
-                ),
-                (
-                    "categorical",
-                    Pipeline(
-                        [
-                            ("normalize", FunctionTransformer(normalize_categories)),
-                            (
-                                "imputer",
-                                SimpleImputer(strategy="most_frequent", keep_empty_features=True),
-                            ),
-                            ("encode", OneHotEncoder(handle_unknown="ignore")),
-                        ]
-                    ),
-                    categorical,
-                ),
-            ]
-        )
-        return Pipeline([("preprocessing", preprocessing), ("model", model)])
 
-    return {
-        "dummy_prior": pipeline(DummyClassifier(strategy="prior")),
-        "logistic_regression": pipeline(LogisticRegression(max_iter=2000, random_state=42)),
+def build_baselines(train: pd.DataFrame) -> dict[str, Pipeline]:
+    """Inférer les types sur train ; chaque pipeline possède son prétraitement."""
+    estimators = {
+        "dummy_prior": DummyClassifier(strategy="prior"),
+        "logistic_regression": LogisticRegression(max_iter=2000, random_state=42),
     }
+    return {name: _build_pipeline(train, model) for name, model in estimators.items()}
 
 
 def select_threshold(y, probability) -> float:

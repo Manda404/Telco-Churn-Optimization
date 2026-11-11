@@ -33,8 +33,7 @@ dependencies = [
 
 [tool.poetry]
 packages = [
-    { include = "telco_churn", from = "src" },
-    { include = "telco_churn_optimization", from = "src" }
+    { include = "telco_churn", from = "src" }
 ]
 
 [tool.poetry.group.notebook.dependencies]
