@@ -1,0 +1,40 @@
+# Dates fixées pour un scénario de développement, pas optimisées pour minimiser le drift.
+id_column: customer_id
+date_column: snapshot_date
+date_format: "%Y-%m-%d"
+train_start: "2024-01-01"
+train_end: "2024-06-30"
+validation_start: "2024-08-01"
+validation_end: "2024-09-30"
+test_start: "2024-11-01"
+test_end: "2024-12-31"
+# Hypothèse de calcul, NON preuve de l'horizon réel.
+label_horizon_days: 30
+label_horizon_confirmed: false
+label_availability_lag_days: 0
+embargo_days: 0
+label_observed_through: null
+# Prédire les futurs snapshots de clients existants ; les ID ne sont jamais des features.
+customer_policy: recurring
+# Les snapshots identiques après transformation sont équivalents ; conflits de clé = erreur.
+duplicate_policy: drop_equivalent
+# Toute l'année 2024 a déjà été explorée dans l'EDA : ce test n'est pas intact.
+prior_eda_start: "2024-01-01"
+prior_eda_end: "2024-12-31"
+backtest_folds:
+  - train_end: "2024-02-29"
+    validation_start: "2024-04-01"
+    validation_end: "2024-04-30"
+  - train_end: "2024-04-30"
+    validation_start: "2024-06-01"
+    validation_end: "2024-06-30"
+drift:
+  quantile_bins: 10
+  smoothing: 0.000001
+  psi_warning: 0.10
+  psi_high: 0.25
+  tv_warning: 0.10
+  tv_high: 0.20
+  missing_warning_pp: 5
+  missing_high_pp: 10
+  unseen_warning_percent: 1

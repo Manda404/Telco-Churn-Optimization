@@ -8,3 +8,5 @@ validation_config_path: configs/validation.yaml
 eda_config_path: configs/data.yaml
 features_config_path: configs/features.yaml
 feature_output_dir: data/processed
+temporal_config_path: configs/temporal_validation.yaml
+split_output_dir: data/processed/temporal_splits

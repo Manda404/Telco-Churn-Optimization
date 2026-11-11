@@ -1,0 +1,15 @@
+check,status,detail
+feature_exclusions,PASS,Colonnes interdites dans X : []
+snapshot_overlap_train_validation,PASS,0 clés communes
+client_overlap_train_validation,INFO,3062 clients communs ; politique recurring
+snapshot_overlap_train_test,PASS,0 clés communes
+client_overlap_train_test,INFO,2812 clients communs ; politique recurring
+snapshot_overlap_validation_test,PASS,0 clés communes
+client_overlap_validation_test,INFO,2950 clients communs ; politique recurring
+chronology_and_purge_train_validation,PASS,"Purge de 30 jours, selon horizon déclaré"
+chronology_and_purge_validation_test,PASS,"Purge de 30 jours, selon horizon déclaré"
+label_horizon,UNVERIFIED,30 jours : hypothèse
+feature_availability,UNVERIFIED,Sources de 17 features non confirmées ; voir catalogue
+learned_preprocessing,PASS,Aucune statistique apprise avant le split déclarée dans le manifeste
+untouched_test,WARN,Période déjà explorée dans l'EDA : test de développement
+test_label_maturity,UNVERIFIED,Fin de disponibilité des labels non documentée

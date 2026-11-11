@@ -1,0 +1,104 @@
+{
+  "status": "provisional_development_split",
+  "training_validated": false,
+  "feature_columns": [
+    "monthly_fee",
+    "monthly_fee_missing",
+    "monthly_fee_invalid",
+    "data_gb",
+    "support_calls_3m",
+    "late_payments",
+    "nps",
+    "nps_missing",
+    "nps_invalid",
+    "contract",
+    "region",
+    "channel",
+    "age_group",
+    "tenure_months",
+    "tenure_unavailable",
+    "log1p_tenure_months",
+    "support_payment_interaction"
+  ],
+  "feature_dtypes": {
+    "monthly_fee": "float64",
+    "monthly_fee_missing": "uint8",
+    "monthly_fee_invalid": "uint8",
+    "data_gb": "float64",
+    "support_calls_3m": "float64",
+    "late_payments": "float64",
+    "nps": "float64",
+    "nps_missing": "uint8",
+    "nps_invalid": "uint8",
+    "contract": "string",
+    "region": "string",
+    "channel": "string",
+    "age_group": "string",
+    "tenure_months": "float64",
+    "tenure_unavailable": "uint8",
+    "log1p_tenure_months": "float64",
+    "support_payment_interaction": "float64"
+  },
+  "metadata_columns": [
+    "source_row",
+    "customer_id",
+    "snapshot_date",
+    "churn"
+  ],
+  "source_row_is_not_a_feature": true,
+  "config": {
+    "id_column": "customer_id",
+    "date_column": "snapshot_date",
+    "date_format": "%Y-%m-%d",
+    "train_start": "2024-01-01",
+    "train_end": "2024-06-30",
+    "validation_start": "2024-08-01",
+    "validation_end": "2024-09-30",
+    "test_start": "2024-11-01",
+    "test_end": "2024-12-31",
+    "label_horizon_days": 30,
+    "label_horizon_confirmed": false,
+    "label_availability_lag_days": 0,
+    "embargo_days": 0,
+    "label_observed_through": null,
+    "customer_policy": "recurring",
+    "duplicate_policy": "drop_equivalent",
+    "prior_eda_start": "2024-01-01",
+    "prior_eda_end": "2024-12-31",
+    "backtest_folds": [
+      {
+        "train_end": "2024-02-29",
+        "validation_start": "2024-04-01",
+        "validation_end": "2024-04-30"
+      },
+      {
+        "train_end": "2024-04-30",
+        "validation_start": "2024-06-01",
+        "validation_end": "2024-06-30"
+      }
+    ],
+    "drift": {
+      "quantile_bins": 10,
+      "smoothing": 1e-06,
+      "psi_warning": 0.1,
+      "psi_high": 0.25,
+      "tv_warning": 0.1,
+      "tv_high": 0.2,
+      "missing_warning_pp": 5.0,
+      "missing_high_pp": 10.0,
+      "unseen_warning_percent": 1.0
+    }
+  },
+  "n_rows": {
+    "train": 20103,
+    "validation": 6309,
+    "test": 5910
+  },
+  "excluded_rows": 6367,
+  "unverified_checks": [
+    "label_horizon",
+    "feature_availability",
+    "test_label_maturity"
+  ],
+  "failed_checks": []
+}

@@ -51,6 +51,8 @@ class Settings(BaseModel):
     eda_config_path: Path
     features_config_path: Path
     feature_output_dir: Path
+    temporal_config_path: Path
+    split_output_dir: Path
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
     @field_validator("churn_target_column", "pilot_target_column")
@@ -70,6 +72,8 @@ class Settings(BaseModel):
         "eda_config_path",
         "features_config_path",
         "feature_output_dir",
+        "temporal_config_path",
+        "split_output_dir",
     )
     @classmethod
     def require_absolute_path(cls, value: Path) -> Path:
@@ -116,6 +120,8 @@ class Settings(BaseModel):
             "eda_config_path",
             "features_config_path",
             "feature_output_dir",
+            "temporal_config_path",
+            "split_output_dir",
         ):
             if key not in values:
                 continue  # Pydantic signalera le champ manquant.
