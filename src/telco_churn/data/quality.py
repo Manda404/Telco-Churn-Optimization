@@ -89,12 +89,19 @@ class DataQualityReport:
         )
         return DatasetInspector(options).inspect(df)
 
-    def show(self, df: pd.DataFrame, save_path: str | Path | None = None) -> None:
+    def show(
+        self,
+        df: pd.DataFrame,
+        save_path: str | Path | None = None,
+        *,
+        title: str = "Data Quality Report",
+    ) -> None:
         """Build and display the visual quality dashboard for ``df``.
 
         The plotting dependency is imported lazily so pipelines that only use
         :meth:`build` or :meth:`log` do not need to initialize Matplotlib. The
         method returns ``None`` so Jupyter does not render the figure twice.
+        ``title`` sets the heading embedded in the displayed or saved image.
         """
         import matplotlib.pyplot as plt
 
@@ -103,6 +110,7 @@ class DataQualityReport:
         plot_data_quality_report(
             self.build(df),
             size=self._size,
+            title=title,
             save_path=save_path,
         )
         if save_path is None:

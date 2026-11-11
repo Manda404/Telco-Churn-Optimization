@@ -17,9 +17,6 @@ PROFILE_COLUMNS = (
     "% Missing",
     "Cardinality",
     "% Unique",
-    "Zeros",
-    "% Zeros",
-    "Infinite",
     "Outliers",
     "% Outliers",
     "Min",
@@ -115,12 +112,7 @@ class DatasetInspector:
         numeric = pd.to_numeric(series, errors="coerce")
         finite_mask = numeric.notna() & np.isfinite(numeric)
         finite = numeric.loc[finite_mask].astype(float)
-        infinite = int((numeric.notna() & ~np.isfinite(numeric)).sum())
-        zeros = int((finite == 0).sum())
         statistics: dict[str, Any] = {
-            "Zeros": zeros,
-            "% Zeros": self._percentage(zeros, len(finite)),
-            "Infinite": infinite,
             "Outliers": 0,
             "% Outliers": 0.0,
         }

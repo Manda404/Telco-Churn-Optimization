@@ -1,0 +1,47 @@
+# Contrat initial à confirmer avec le dictionnaire métier.
+# Les bornes de plausibilité et catégories canoniques produisent des warnings.
+# Aucune règle ne nettoie ou ne supprime de ligne.
+example_limit: 5
+datasets:
+  churn:
+    required_columns: [customer_id, snapshot_date, signup_date, age, contract, region, dept, channel, monthly_fee, data_gb, support_calls_3m, late_payments, nps, last_invoice_amount, retention_offer_declined]
+    id_column: customer_id
+    unique_key: [customer_id, snapshot_date]
+    key_note: "Hypothèse : une observation par client et par date de photographie."
+    numeric:
+      customer_id: {minimum: 0, integer: true, note: "Identifiant numérique non négatif attendu."}
+      age: {minimum: 18, maximum: 120, severity: warning, note: "Hypothèse de plausibilité à confirmer ; aucun usage pour le ciblage."}
+      monthly_fee: {minimum: 0, severity: warning, note: "Montant négatif à expliquer : erreur ou ajustement comptable ?"}
+      data_gb: {minimum: 0, note: "Volume consommé non négatif ; aucun plafond métier confirmé."}
+      support_calls_3m: {minimum: 0, integer: true, note: "Compteur entier non négatif."}
+      late_payments: {minimum: 0, integer: true, note: "Compteur entier non négatif."}
+      nps: {minimum: 0, maximum: 10, severity: warning, note: "Hypothèse : note individuelle 0–10, et non NPS agrégé -100–100."}
+      retention_offer_declined: {minimum: 0, maximum: 1, integer: true, note: "Indicateur binaire attendu."}
+      last_invoice_amount: {minimum: 0, severity: warning, note: "Montant négatif à expliquer avant correction."}
+    categories:
+      contract: [mensuel, annuel, biannuel]
+      channel: [web, boutique, telephone, partenaire]
+      region: [ARA, NAQ, IDF, OCC, BRE, GES, PACA]
+    dates: {snapshot_date: "%Y-%m-%d", signup_date: "%Y-%m-%d"}
+    date_order: [[signup_date, snapshot_date]]
+    missingness_columns: [age, monthly_fee, nps]
+    group_columns: [snapshot_date, contract, region]
+  pilot:
+    required_columns: [customer_id, age, contract, region, tenure_months, monthly_fee, support_calls_3m, late_payments, contacted]
+    id_column: customer_id
+    unique_key: [customer_id]
+    key_severity: warning
+    key_note: "Hypothèse à confirmer : une ligne par client dans le pilote."
+    numeric:
+      customer_id: {minimum: 0, integer: true, note: "Identifiant numérique non négatif attendu."}
+      age: {minimum: 18, maximum: 120, severity: warning, note: "Hypothèse de plausibilité à confirmer."}
+      tenure_months: {minimum: 0, integer: true, note: "Ancienneté entière non négative."}
+      monthly_fee: {minimum: 0, severity: warning, note: "Montant négatif à expliquer."}
+      support_calls_3m: {minimum: 0, integer: true, note: "Compteur entier non négatif."}
+      late_payments: {minimum: 0, integer: true, note: "Compteur entier non négatif."}
+      contacted: {minimum: 0, maximum: 1, integer: true, note: "Indicateur de contact binaire attendu."}
+    categories:
+      contract: [mensuel, annuel, biannuel]
+      region: [ARA, NAQ, IDF, OCC, BRE, GES, PACA]
+    missingness_columns: [age, monthly_fee]
+    group_columns: [contract, region, contacted]

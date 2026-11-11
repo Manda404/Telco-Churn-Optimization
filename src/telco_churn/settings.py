@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 import yaml
-from pydantic import BaseModel, ConfigDict, ValidationError, field_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
 Environment = Literal["dev", "staging", "prod"]
 
@@ -44,10 +44,23 @@ class Settings(BaseModel):
     project_root: Path
     churn_path: Path
     pilot_path: Path
+    churn_target_column: str = Field(min_length=1, strict=True)
+    pilot_target_column: str = Field(min_length=1, strict=True)
     log_path: Path
+    validation_config_path: Path
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
-    @field_validator("project_root", "churn_path", "pilot_path", "log_path")
+    @field_validator("churn_target_column", "pilot_target_column")
+    @classmethod
+    def require_non_blank_column(cls, value: str) -> str:
+        """Refuser un nom de cible vide sans modifier le nom configuré."""
+        if not value.strip():
+            raise ValueError("Le nom de la colonne cible ne peut pas être vide.")
+        return value
+
+    @field_validator(
+        "project_root", "churn_path", "pilot_path", "log_path", "validation_config_path"
+    )
     @classmethod
     def require_absolute_path(cls, value: Path) -> Path:
         """Garantir que les consommateurs reçoivent des chemins absolus."""
@@ -85,7 +98,7 @@ class Settings(BaseModel):
         if reserved:
             raise ValueError(f"Clés réservées interdites dans les YAML : {sorted(reserved)}")
 
-        for key in ("churn_path", "pilot_path", "log_path"):
+        for key in ("churn_path", "pilot_path", "log_path", "validation_config_path"):
             if key not in values:
                 continue  # Pydantic signalera le champ manquant.
             value = values[key]

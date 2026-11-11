@@ -21,6 +21,7 @@ def plot_data_quality_report(
     save_path: str | Path | None = None,
     *,
     size: tuple[float, float] = (12, 8),
+    title: str = "Data Quality Report",
 ) -> Figure:
     """Render dataset health, missing values, target balance and dtype mix.
 
@@ -33,6 +34,8 @@ def plot_data_quality_report(
         automatically by Jupyter.
     size:
         Figure width and height in inches.
+    title:
+        Heading embedded in the figure, including when saved.
     """
     n_rows = int(report.get("n_rows", 0))
     n_columns = int(report.get("n_columns", 0))
@@ -136,7 +139,7 @@ def plot_data_quality_report(
         dtype_ax.text(0.5, 0.5, "No dtype information", ha="center", va="center")
     dtype_ax.set_title("Column types", fontweight="bold")
 
-    fig.suptitle("Data Quality Report", fontsize=16, fontweight="bold")
+    fig.suptitle(title, fontsize=16, fontweight="bold")
     fig.tight_layout()
     if save_path is not None:
         destination = Path(save_path)

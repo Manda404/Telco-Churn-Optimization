@@ -15,6 +15,8 @@ def test_paths_do_not_depend_on_working_directory(monkeypatch, tmp_path, environ
     monkeypatch.chdir(tmp_path)
     after = Settings.load()
     assert after == before
+    assert after.churn_target_column == "churn"
+    assert after.pilot_target_column == "churn_30d"
     assert after.environment == environment
     assert after.churn_path == after.project_root / "data/raw/churn_clients.csv"
     assert after.pilot_path == after.project_root / "data/raw/pilote_campagne_2023.csv"
@@ -45,11 +47,23 @@ def test_overrides_and_configuration_errors(tmp_path):
     base_path = config_dir / "base.yaml"
     base_path.write_text(yaml.safe_dump(base), encoding="utf-8")
     env_path = config_dir / "environments/dev.yaml"
-    env_path.write_text("churn_path: custom/clients.csv\n", encoding="utf-8")
+    env_path.write_text(
+        "churn_path: custom/clients.csv\nchurn_target_column: custom_target\n", encoding="utf-8"
+    )
+    assert Settings.load("dev", project_root=tmp_path).churn_target_column == "custom_target"
     assert Settings.load("dev", project_root=tmp_path).churn_path == (
         tmp_path / "custom/clients.csv"
     )
-    for invalid_yaml in ("log_level: TRACE", "typo: value", "churn_path: ''", "- item", "key: ["):
+    for invalid_yaml in (
+        "log_level: TRACE",
+        "typo: value",
+        "churn_path: ''",
+        "churn_target_column: ''",
+        "pilot_target_column: '   '",
+        "pilot_target_column: 123",
+        "- item",
+        "key: [",
+    ):
         env_path.write_text(invalid_yaml, encoding="utf-8")
         with pytest.raises(ValueError):
             Settings.load("dev", project_root=tmp_path)

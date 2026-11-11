@@ -23,11 +23,10 @@ def test_profile_excludes_infinite_values_from_statistics():
     frame = pd.DataFrame({"value": [0, 1, 1, 1, 100, np.inf, -np.inf, np.nan]})
     original = frame.copy(deep=True)
     row = DataQualityReport().profile_dataset(frame).iloc[0]
-    assert row["Infinite"] == 2
+    assert {"Zeros", "% Zeros", "Infinite"}.isdisjoint(row.index)
     assert row["Missing"] == 1
     assert row["Outliers"] == 2
     assert row["% Outliers"] == 40
-    assert row["% Zeros"] == 20
     assert row["Mean"] == pytest.approx(20.6)
     pd.testing.assert_frame_equal(frame, original)
 
