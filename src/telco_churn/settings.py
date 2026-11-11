@@ -48,6 +48,7 @@ class Settings(BaseModel):
     pilot_target_column: str = Field(min_length=1, strict=True)
     log_path: Path
     validation_config_path: Path
+    eda_config_path: Path
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
     @field_validator("churn_target_column", "pilot_target_column")
@@ -59,7 +60,12 @@ class Settings(BaseModel):
         return value
 
     @field_validator(
-        "project_root", "churn_path", "pilot_path", "log_path", "validation_config_path"
+        "project_root",
+        "churn_path",
+        "pilot_path",
+        "log_path",
+        "validation_config_path",
+        "eda_config_path",
     )
     @classmethod
     def require_absolute_path(cls, value: Path) -> Path:
@@ -98,7 +104,13 @@ class Settings(BaseModel):
         if reserved:
             raise ValueError(f"Clés réservées interdites dans les YAML : {sorted(reserved)}")
 
-        for key in ("churn_path", "pilot_path", "log_path", "validation_config_path"):
+        for key in (
+            "churn_path",
+            "pilot_path",
+            "log_path",
+            "validation_config_path",
+            "eda_config_path",
+        ):
             if key not in values:
                 continue  # Pydantic signalera le champ manquant.
             value = values[key]

@@ -1,0 +1,49 @@
+# Paramètres du notebook 03 ; aucune règle de préparation des features ici.
+id_column: customer_id
+snapshot_column: snapshot_date
+snapshot_format: "%Y-%m-%d"
+categorical_columns: [contract, region, channel]
+numeric_columns: [monthly_fee, data_gb, support_calls_3m, late_payments, nps, last_invoice_amount]
+comparison_columns: [contract, region]
+min_group_size: 100
+correlation_min_pairs: 100
+# Les valeurs au-delà des moustaches sont masquées graphiquement, sans être supprimées.
+boxplot_showfliers: false
+
+# Extensions EDA : variables calculées uniquement dans une copie analytique.
+signup_column: signup_date
+tenure_column: eda_tenure_months
+tenure_band_column: eda_tenure_band
+days_per_month: 30.4375
+tenure_bins: [0, 3, 6, 12, 24, 48]
+# Intervalles [a, b), dernière classe >= dernière borne.
+# Les domaines valides restent définis dans configs/validation.yaml.
+diagnostic_bands:
+  support_calls_3m: [0, 1, 2, 3, 5]
+  late_payments: [0, 1, 2, 3]
+  nps: [0, 5, 7, 9]
+interaction_column: contract
+
+# Analyse descriptive de l'âge, sans usage pour le ciblage.
+age_column: age
+age_bins: [18, 25, 35, 45, 55, 65, 80]
+
+# Précision descriptive : rééchantillonnage de clients et de leurs historiques entiers.
+deep_eda:
+  min_clients: 30
+  min_events_ci: 5
+  bootstrap_repetitions: 300
+  confidence_level: 0.95
+  random_seed: 42
+  region_column: region
+  # Hypothèses de regroupement EDA uniquement, pas de seuils de campagne.
+  interaction_bins:
+    support_calls_3m: [0, 1, 3]
+    late_payments: [0, 1, 2]
+    monthly_fee: [0, 40, 60, 80]
+    data_gb: [0, 2, 5, 10]
+    nps: [0, 5, 9]
+  interaction_pairs:
+    support_payment: [support_calls_3m, late_payments]
+    fee_usage: [monthly_fee, data_gb]
+    satisfaction_support: [nps, support_calls_3m]

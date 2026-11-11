@@ -87,3 +87,17 @@ class ValidationConfig(BaseModel):
             return cls.model_validate(_read_yaml(path))
         except ValueError as exc:
             raise ValueError(f"Règles de qualité invalides dans {path} : {exc}") from exc
+
+
+class EDAOptions(BaseModel):
+    """Paramètres des approfondissements statistiques, sans pipeline d'entraînement."""
+
+    model_config = ConfigDict(extra="forbid")
+    min_clients: int = Field(default=30, ge=2)
+    min_events_ci: int = Field(default=5, ge=1)
+    bootstrap_repetitions: int = Field(default=300, ge=100, le=5000)
+    confidence_level: float = Field(default=0.95, gt=0, lt=1)
+    random_seed: int = Field(default=42, ge=0)
+    region_column: str = Field(default="region", min_length=1)
+    interaction_bins: dict[str, list[float]]
+    interaction_pairs: dict[str, tuple[str, str]]
